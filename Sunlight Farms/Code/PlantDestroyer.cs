@@ -61,6 +61,19 @@ namespace SunlightFarms
             World.BatchApply(blockChanges);
         }
 
+        private static bool AllowsSunlightToPassThrough(Block block)
+        {
+            if (block.Is<Solid>())
+            {
+                if (block.GetType().Name.ContainsAny(new List<string>() { "Glass", "Ladder" }))
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            return true;
+        }
         /// <summary>
         /// Checks whether there are any blocks above this that would block the light. Glass and framed glass can be used without blocking sunlight
         /// </summary>
@@ -68,28 +81,14 @@ namespace SunlightFarms
         /// <returns>Whether there is a view right up to the sun</returns>
         private static bool HasSunlight(Vector3i plantLocation)
         {
-            //Look at every block above the plant
+            //Look at every block above the plant and stop when we get to an opaque block or we reach the top of the world
             for (int i = 1; i <= World.MaxLandOrWaterUnwrapped(plantLocation.XZ); i++)
             {
                 Vector3i position = plantLocation + Vector3i.Up * i;
                 Block block = World.GetBlock(position);
-                //Only solid blocks that aren't glass or framed glass block the sun
-                if (block.Is<Solid>())
+                if (!AllowsSunlightToPassThrough(block))
                 {
-                    //Dirt, stone, constructed blocks and world objects are all represented by an item
-                    if (block is IRepresentsItem)
-                    {
-                        Type representedItemType = ((IRepresentsItem)block).RepresentedItemType;
-                        if (representedItemType != typeof(GlassItem) && representedItemType != typeof(FramedGlassItem))
-                        {
-                            return false;
-                        }
-                    }
-                    //If it's some other type of block that's okay. I don't know what blocks these might be though
-                    else
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
             return true;
