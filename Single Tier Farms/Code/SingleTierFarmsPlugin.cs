@@ -3,9 +3,9 @@ using Eco.Core.Utils;
 using Eco.Gameplay.GameActions;
 using System;
 
-namespace SunlightFarms
+namespace SingleTierFarms
 {
-    public class SunlightFarmsPlugin : IModKitPlugin, IInitializablePlugin
+    public class SingleTierFarmsPlugin : IModKitPlugin, IInitializablePlugin
     {
         public string GetStatus() => "Active";
 

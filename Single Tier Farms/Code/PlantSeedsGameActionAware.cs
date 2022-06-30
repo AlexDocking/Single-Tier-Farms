@@ -1,13 +1,14 @@
 ﻿using Eco.Core.Utils;
 using Eco.Gameplay.GameActions;
 using Eco.Gameplay.Players;
+using Eco.Shared.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SunlightFarms
+namespace SingleTierFarms
 {
     internal class PlantSeedsGameActionAware : IGameActionAware
     {
@@ -28,7 +29,7 @@ namespace SunlightFarms
             if (PlantDestroyer.DestroyPlantIfNecessary(plantSeeds.ActionLocation))
             {
                 User user = plantSeeds.Citizen;
-                user.MsgLocStr("Plants needs sunlight!", Eco.Shared.Services.NotificationStyle.Error);
+                user.Msg(new LocString("Can't plant when there is dirt above!").Color("red"), Eco.Shared.Services.NotificationStyle.Error);
                 plantSeeds.CurrentPack.EarlyResult = Result.FailLocStr("Couldn't plant without sun");
             }
         }

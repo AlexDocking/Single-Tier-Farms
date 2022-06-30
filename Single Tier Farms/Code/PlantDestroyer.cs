@@ -9,7 +9,7 @@ using Eco.World.Blocks;
 using System;
 using System.Collections.Generic;
 
-namespace SunlightFarms
+namespace SingleTierFarms
 {
     internal static class PlantDestroyer
     {
@@ -61,21 +61,21 @@ namespace SunlightFarms
             World.BatchApply(blockChanges);
         }
 
+        /// <summary>
+        /// Only dirt and tilled dirt should block planting as all multi-tiered farms rely on there being dirt on all levels, while roofs can be allowed
+        /// </summary>
+        /// <param name="block"></param>
+        /// <returns></returns>
         private static bool AllowsSunlightToPassThrough(Block block)
         {
-            if (block.Is<Solid>())
+            if (block is DirtBlock || block is TilledDirtBlock)
             {
-                if (block.GetType().Name.ContainsAny(new List<string>() { "Glass", "Ladder" }))
-                {
-                    return true;
-                }
-
                 return false;
             }
             return true;
         }
         /// <summary>
-        /// Checks whether there are any blocks above this that would block the light. Glass and framed glass can be used without blocking sunlight
+        /// Checks whether there are any blocks above this that would block the light
         /// </summary>
         /// <param name="plantLocation"></param>
         /// <returns>Whether there is a view right up to the sun</returns>
